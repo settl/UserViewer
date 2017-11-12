@@ -10,17 +10,21 @@ import UIKit
 
 class UserListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
-    let cellHeight: CGFloat = 60
-    var activityIndicator = UIActivityIndicatorView()
+    fileprivate let cellHeight: CGFloat = 80
+    fileprivate var activityIndicator = UIActivityIndicatorView()
+    fileprivate let refreshControl = UIRefreshControl()
 
-    var users = [User]()
-    var fetching = false
+    fileprivate var users = [User]()
+    fileprivate var isFetching = false
+    fileprivate var isRefreshing = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Java Users"
-        tableView.register(UserListCell.self, forCellReuseIdentifier: UserListCell.identifier)
+        tableView.register(UINib(nibName: "UserListCell", bundle: nil), forCellReuseIdentifier: UserListCell.identifier)
         tableView.tableFooterView = UIView(frame: .zero)
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         showActivityIndicator()
         fetchMoreUsers()
     }
@@ -34,29 +38,48 @@ class UserListViewController: UIViewController {
             activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: tableView.centerYAnchor, constant: -80)
             ])
-        
+        activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
     }
     
-    func fetchMoreUsers() {
-        guard fetching == false else {
+    @objc func refresh() {
+        guard !isFetching else {
             return
         }
-        fetching = true
+        isRefreshing = true
+        tableView.refreshControl?.beginRefreshing()
+        fetchMoreUsers()
+    }
+    
+    func fetchMoreUsers() {
+        guard !isFetching else {
+            return
+        }
+        isFetching = true
         UserFetcher.shared.fetchUsers()
             .then { users -> Void in
-                self.fetching = false
-                self.activityIndicator.stopAnimating()
-                self.activityIndicator.hidesWhenStopped = true
+                self.stopFetching()
                 let nonNilUsers = users.flatMap( { $0 } )
-                self.users.append(contentsOf: nonNilUsers)
+                if self.isRefreshing {
+                    self.users = nonNilUsers
+                } else {
+                    self.users.append(contentsOf: nonNilUsers)
+                }
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
             }
             .catch { error in
                 print("[ERROR] Error fetching users: \(error)")
+                self.stopFetching()
         }
+    }
+    
+    func stopFetching() {
+        self.activityIndicator.stopAnimating()
+        tableView.refreshControl?.endRefreshing()
+        self.isFetching = false
+        self.isRefreshing = false
     }
 }
 
@@ -79,5 +102,11 @@ extension UserListViewController: UITableViewDataSource {
 extension UserListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return cellHeight
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let userDetailViewController = UserDetailViewController(user: users[indexPath.row])
+        navigationController?.pushViewController(userDetailViewController, animated: true)
     }
 }
