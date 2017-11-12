@@ -5,7 +5,7 @@ A Swift app to browse Java users on GitHub.
 - iOS 11.0
 - Swift 4
 
-#Installation
+# Installation
 - Clone the app or download the zip file
 - Run "pod install"
 - Open UserView.xcworkspace
