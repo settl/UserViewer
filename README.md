@@ -14,5 +14,6 @@ In order to make requests via the GitHub API,
 1. replace "YOUR_USERNAME" in UserFetcher.swift with your GitHub login name
 2. replace "YOUR_TOKEN" in UserFetcher.swift with your personal access token linked to your GitHub account
 
-If you don't have a personal access token, go to Settings -> Developer Settings -> Personal access tokens and generate a new token. 
+If you don't have a personal access token, go to Settings -> Developer Settings -> Personal access tokens and generate a new token.
+
 *** Note: Currently basic auth does not work with accounts that are using two-factor-authentication *** 
