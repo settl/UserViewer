@@ -1,0 +1,22 @@
+PODS:
+  - Alamofire (4.5.0)
+  - AlamofireImage (3.3.0):
+    - Alamofire (~> 4.5)
+  - PromiseKit/Alamofire (4.4.3):
+    - Alamofire (~> 4.0)
+    - PromiseKit/CorePromise
+  - PromiseKit/CorePromise (4.4.3)
+
+DEPENDENCIES:
+  - Alamofire (= 4.5)
+  - AlamofireImage (= 3.3)
+  - PromiseKit/Alamofire (~> 4.0)
+
+SPEC CHECKSUMS:
+  Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
+  AlamofireImage: 2e784dc5d00f04903a52c1d169181469c805c3df
+  PromiseKit: fbb52a0d154402c57eeb6eccd36dd7724fcf6117
+
+PODFILE CHECKSUM: 597c55393f39c1d883f05385fdd2ed3ecb2ba58f
+
+COCOAPODS: 1.2.0
