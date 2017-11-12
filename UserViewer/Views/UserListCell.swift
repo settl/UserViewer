@@ -34,13 +34,9 @@ class UserListCell: UITableViewCell {
     
     func configure(user: User) {
         nameLabel.text = user.name
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let date = ISO8601DateFormatter().date(from: user.registrationDate)
-        let s = dateFormatter.string(from: date!)
-        
-        registrationDateLabel.text = "member since: \(s)"
+        if let formattedDateString = UserViewModel.formatRegistrationDate(date: user.registrationDate) {
+            registrationDateLabel.text = formattedDateString
+        }
         guard let imageURL = URL(string: user.avatarURL) else {
             return
         }
