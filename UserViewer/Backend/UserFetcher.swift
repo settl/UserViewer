@@ -16,6 +16,14 @@ class UserFetcher {
     private init() {}
     var baseURLString = "https://api.github.com/"
     var currentPage = 1
+    var userName = "YOUR_USERNAME"
+    var token = "YOUR_TOKEN"
+    
+    var authorizationHeader: [String: String] {
+        let credentials = "\(userName):\(token)".utf8
+        let base64Credentials = Data(credentials).base64EncodedString()
+        return ["Authorization": "Basic \(base64Credentials)"]
+    }
     
     func fetchUsers() -> Promise<[User?]> {
         let urlString = "\(baseURLString)search/users?type=user&q=language:Java&per_page=10&page=\(currentPage)"
@@ -44,7 +52,7 @@ class UserFetcher {
     
     private func fetchUserList(url: URL) -> Promise<[String]> {
         return Promise { fulfill, reject in
-            Alamofire.request(url).validate().responseJSON()
+            Alamofire.request(url, headers: authorizationHeader).validate().responseJSON()
                 .then { response -> Void in
                     let urls = UserParser().parseUserList(userList: response)
                     fulfill(urls)
@@ -61,7 +69,7 @@ class UserFetcher {
             return Promise { _, reject in reject(NSError(domain: "URLFetcher", code: 123, userInfo: nil)) }
         }
         return Promise { fulfill, reject in
-            Alamofire.request(url).validate().responseJSON()
+            Alamofire.request(url, headers: authorizationHeader).validate().responseJSON()
                 .then { response -> Void in
                     guard let user = UserParser().parseUser(user: response) else {
                         fulfill(nil)
