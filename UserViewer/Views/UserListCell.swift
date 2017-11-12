@@ -41,7 +41,7 @@ class UserListCell: UITableViewCell {
             return
         }
         avatarImageView.af_setImage(withURL: imageURL,
-                                    placeholderImage: #imageLiteral(resourceName: "placeholder"),
+                                    placeholderImage: nil,
                                     imageTransition: .crossDissolve(0.2))
     }
     

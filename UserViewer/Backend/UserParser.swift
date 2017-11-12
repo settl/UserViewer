@@ -34,7 +34,7 @@ struct UserParser {
             let registrationDate = jsonDict["created_at"] as? String,
             let avatarURL = jsonDict["avatar_url"] as? String,
             let email = jsonDict["email"] as? String else {
-                print("parsing error")
+                print("Could not parse user")
                 return nil
         }
         return User(name: name,

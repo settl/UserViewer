@@ -58,7 +58,6 @@ class UserListViewController: UIViewController {
         isFetching = true
         UserFetcher.shared.fetchUsers()
             .then { users -> Void in
-                self.stopFetching()
                 let nonNilUsers = users.flatMap( { $0 } )
                 if self.isRefreshing {
                     self.users = nonNilUsers
@@ -66,6 +65,7 @@ class UserListViewController: UIViewController {
                     self.users.append(contentsOf: nonNilUsers)
                 }
                 DispatchQueue.main.async {
+                    self.stopFetching()
                     self.tableView.reloadData()
                 }
             }
