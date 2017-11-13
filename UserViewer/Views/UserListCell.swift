@@ -46,6 +46,6 @@ class UserListCell: UITableViewCell {
     }
     
     override func prepareForReuse() {
-        imageView?.image = nil
+        avatarImageView.image = nil
     }
 }
